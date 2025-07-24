@@ -29,7 +29,6 @@ class ExecutionEngine:
             )
             yield exit_code
         except KeyboardInterrupt:
-            yield "^C\nProcess interrupted by user (Ctrl+C)\n"
             try:
                 process.terminate()
                 process.wait(timeout=2)
@@ -40,6 +39,8 @@ class ExecutionEngine:
                 remaining_stream = process.stdout.read()
                 if remaining_stream:
                     yield remaining_stream
+            yield "^C\nProcess interrupted by user (Ctrl+C)\n"
+            yield ExitCode(exit_code=1)
 
 
 execution_engine = ExecutionEngine()
